@@ -2,27 +2,28 @@ var express = require("express");
 var sql = require("mssql");
 var http = require("http");
 var app = express();
+var db = require('./db');
 
 var port = process.env.PORT || 8000;
-var config = {
-  server: "localhost\\SQLEXPRESS",
-  database: "GCM",
-  user: "sa",
-  password: "Palomino1!",
-  port: 1433
-};
 
-sql.connect(config).then(() => {
-  new sql.Request()
-    .query("select * from agents")
-    .then(function(dbData) {
-      if (dbData == null || dbData.length === 0) return;
-      console.dir(dbData);
-    })
-    .catch(function(error) {
-      console.dir(error);
-    });
+app.get("/", (req, res) => {
+  res.send("Get request to the home page");
 });
 
-app.listen(8000);
-console.log(port + " is the magic port");
+app.get("/customers", (req, res) => {
+  sql.connect(db.config).then(() => {
+    new sql.Request()
+      .query("select * from Customers")
+      .then(function(dbData) {
+        if (dbData == null || dbData.length === 0) return;
+        res.send(dbData.recordsets[0]);
+        sql.close();
+      })
+      .catch(function(error) {
+        console.dir(error);
+        sql.close();
+      });
+  });
+});
+
+app.listen(port);
