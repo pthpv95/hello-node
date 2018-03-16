@@ -1,8 +1,9 @@
 var express = require("express");
 var router = express.Router();
-var config = require("../db");
+// var DBUtil = require('../common/db-util');
 
-exports.index = (req, res) => {
-  console.log("GET Request");
-  res.send("Hello get");
-};
+router.get('/', (req, res) => {
+  res.send("Get request to the home page");
+});
+
+module.exports = router;

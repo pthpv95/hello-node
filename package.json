@@ -9,8 +9,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.18.2",
     "express": "^4.16.2",
     "mssql": "^4.1.0",
-    "seriate": "^0.13.1"
+    "seriate": "^0.13.1",
+    "morgan": "^1.9.0"
   }
 }

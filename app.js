@@ -1,29 +1,17 @@
 var express = require("express");
+var bodyParser = require('body-parser');
 var sql = require("mssql");
-var http = require("http");
-var app = express();
 var db = require('./db');
+var logger = require('morgan');
+var routes = require('./routes/index');
+var agents = require('./routes/agents');
 
-var port = process.env.PORT || 8000;
+var port = process.env.PORT || 5000;
 
-app.get("/", (req, res) => {
-  res.send("Get request to the home page");
-});
-
-app.get("/customers", (req, res) => {
-  sql.connect(db.config).then(() => {
-    new sql.Request()
-      .query("select * from Customers")
-      .then(function(dbData) {
-        if (dbData == null || dbData.length === 0) return;
-        res.send(dbData.recordsets[0]);
-        sql.close();
-      })
-      .catch(function(error) {
-        console.dir(error);
-        sql.close();
-      });
-  });
-});
+var app = express();
+app.use(logger('dev'));
+app.use(bodyParser.json());
+app.use('/', routes);
+app.use('/agents', agents);
 
 app.listen(port);
